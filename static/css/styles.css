@@ -1,2 +1,87 @@
-body { background: #f8f9fa; }
-canvas { background: white; border: 1px solid #ddd; border-radius: .25rem; }
+#map {
+    display: none;
+    height: 400px;
+    margin-bottom: 50px;
+    border: 1px solid green;
+    border-radius: 5px;
+}
+
+.chartBorder {
+    border: 1px solid green;
+    border-radius: 5px;
+    padding: 25px;
+}
+
+#loadingSpinner {
+    display: none;
+    position: fixed;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 9999;
+}
+
+.spinner {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    z-index: 1;
+    width: 120px;
+    height: 120px;
+    margin: -76px 0 0 -76px;
+    border: 16px solid #f3f3f3;
+    border-radius: 50%;
+    border-top: 16px solid #555555;
+    -webkit-animation: spin 2s linear infinite;
+    animation: spin 2s linear infinite;
+}
+
+.LRVspinner {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    z-index: 1;
+    width: 50px;
+    height: 50px;
+    margin: -76px 0 0 -76px;
+    border: 10px solid #f3f3f3;
+    border-radius: 50%;
+    border-top: 10px solid #555555;
+    -webkit-animation: spin 2s linear infinite;
+    animation: spin 2s linear infinite;
+}
+
+.timeSpinner {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    z-index: 1;
+    width: 50px;
+    height: 50px;
+    margin: -76px 0 0 -76px;
+    border: 10px solid #f3f3f3;
+    border-radius: 50%;
+    border-top: 10px solid #555555;
+    -webkit-animation: spin 2s linear infinite;
+    animation: spin 2s linear infinite;
+}
+
+@-webkit-keyframes spin {
+    0% {
+        -webkit-transform: rotate(0deg);
+    }
+
+    100% {
+        -webkit-transform: rotate(360deg);
+    }
+}
+
+@keyframes spin {
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
+}

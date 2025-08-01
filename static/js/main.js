@@ -122,7 +122,7 @@ document.addEventListener("DOMContentLoaded", function () {
     LRVspinner.style.display = "block";
     if (container) container.style.display = "none";
 
-    fetch("/api/fetch_lrv_options.php", {
+    fetch("/api/fetch_lrv_options", {
       method: "POST",
       body: formData,
     })
@@ -196,7 +196,7 @@ document.addEventListener("DOMContentLoaded", function () {
     spinner.style.display = "block";
     if (container) container.style.display = "none";
 
-    fetch("/api/fetch_time_options.php", {
+    fetch("/api/fetch_time_options", {
       method: "POST",
       body: formData,
     })
@@ -305,7 +305,7 @@ document.addEventListener("DOMContentLoaded", function () {
       if (el) el.style.display = "none";
     });
 
-    fetch("/api/fetch_chart_data.php", {
+    fetch("/api/fetch_chart_data", {
       method: "POST",
       body: formData,
     })
@@ -384,7 +384,7 @@ document.addEventListener("DOMContentLoaded", function () {
       }
     });
 
-    fetch("/api/fetch_chart_data_URL.php", {
+    fetch("/api/fetch_chart_data_URL", {
       method: "POST",
       body: formData,
     })
@@ -428,7 +428,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
   // === Map and Chart Utility Functions ===
   function fetchStations() {
-    fetch("/fetch_stations.php")
+    fetch("/fetch_stations")
       .then((response) => response.json())
       .then((data) => {
         if (data.success && Array.isArray(data.stations)) {

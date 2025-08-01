@@ -1,0 +1,18 @@
+@"
+# Python virtual env
+venv/
+
+# Byte-compiled / cache
+__pycache__/
+*.py[cod]
+
+# Flask instance folder
+instance/
+
+# Environment variables
+.env
+
+# OS files
+.DS_Store
+Thumbs.db
+"@ | Set-Content -Path .gitignore

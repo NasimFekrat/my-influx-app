@@ -10,20 +10,44 @@ query_api = client.query_api()
 def index():
     return render_template('index.html')
 
+from flask import current_app
+
 @app.route('/api/fetch_lrv_options', methods=['POST'])
 def fetch_lrv_options():
-    date = request.form['date']
-    # Translate PHP SQL into Flux to get unique leadLRV & runsheetId
-    flux = f'''from(bucket:"{INFLUX_BUCKET}")
-      |> range(start: {date}T00:00:00Z, stop: {date}T23:59:59Z)
-      |> filter(fn: (r) => r._measurement == "record")
-      |> keep(columns:["runsheetId","eastFacingLrv"])
-      |> group(columns:["runsheetId","eastFacingLrv"])
-      |> distinct()'''
-    tables = query_api.query(flux)
-    lrvs = [ { 'leadLRV':t.records[0].values.get('eastFacingLrv'), 'runsheetId':t.records[0].values.get('runsheetId') }
-             for t in tables ]
-    return jsonify(success=True, lrvs=lrvs)
+    date = request.form.get('date')
+    if not date:
+        return jsonify(success=False, error="Missing 'date'"), 400
+
+    # Build correct RFC3339 timestamps
+    start = f"{date}T00:00:00Z"
+    stop  = f"{date}T23:59:59Z"
+
+    # Note the quotes around the timestamps
+    flux = (
+        f'from(bucket: "{INFLUX_BUCKET}") '
+        f'|> range(start: "{start}", stop: "{stop}") '
+        '|> filter(fn: (r) => r._measurement == "record") '
+        '|> keep(columns: ["runsheetId", "eastFacingLrv"]) '
+        '|> distinct()'
+    )
+
+    try:
+        tables = query_api.query(flux)
+    except Exception as e:
+        # Log the real exception for debugging
+        current_app.logger.error("InfluxDB query failed: %s", e)
+        # Return a clean JSON error so your JS can handle it
+        return jsonify(success=False, error="InfluxDB query failed"), 500
+
+    options = []
+    for table in tables:
+        for rec in table.records:
+            options.append({
+                'runsheetId': rec.values.get('runsheetId'),
+                'leadLRV':    rec.values.get('eastFacingLrv')
+            })
+
+    return jsonify(success=True, options=options)
 
 @app.route('/api/fetch_time_options', methods=['POST'])
 def fetch_time_options():
@@ -59,4 +83,5 @@ def fetch_chart_data_url():
     return fetch_chart_data_10min()
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    port = int(os.environ.get('PORT', 5000))
+    app.run(host='0.0.0.0', port=port)
